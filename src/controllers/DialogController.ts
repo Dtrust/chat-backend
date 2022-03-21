@@ -1,13 +1,13 @@
 import express from 'express'
 
-import { DialogModel } from '../models';
+import { DialogModel, MessageModel } from '../models';
 
 
 class DialogController {
 
     index(req: express.Request, res: express.Response) {
 
-        const authorId: string = req.params.id;
+        const authorId: string = req.params.authorId;
 
         DialogModel.find()
             .or([{author: authorId}, {partner: authorId}])
@@ -60,9 +60,24 @@ class DialogController {
 
         dialog
             .save()
-            .then((obj: any) => {
-                console.log(obj)
-                res.json(obj)
+            .then((dialogObj: any) => {
+                console.log(dialogObj)
+
+                const message = new MessageModel({
+                    text: req.body.text,
+                    dialog: dialogObj._id,
+                    user: req.body.author,
+                });
+
+                message
+                    .save()
+                    .then(() => {
+                        res.json({dialog: dialogObj})
+                    })
+                    .catch((reason: any) => {
+                        res.json(reason)
+                    });
+
             })
             .catch((reason: any) => {
                 res.json(reason)
@@ -72,14 +87,14 @@ class DialogController {
     delete(req: express.Request, res: express.Response) {
         const id: string = req.params.id;
 
-        DialogModel.findByIdAndDelete(id, (err: any, user: any) =>{
+        DialogModel.findByIdAndDelete(id, (err: any, dialog: any) =>{
             if(err) {
                 res.status(404).json({
                     message: 'Dialog not found'
                 })
             } else {
                 res.json({
-                    message: `Dialog ${user.fullName} removed`
+                    message: `Dialog removed`
                 });
             }
         });
