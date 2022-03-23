@@ -22,11 +22,20 @@ class UserController {
         });
     }
 
-    getMe() {
+    getMe(req: any, res: express.Response) {
+        const id: string = req.user._id;
 
+        UserModel.findById(id, (err: any, user: any) =>{
+            if(err) {
+                res.status(404).json({
+                    message: "User not found"
+                })
+            }
+            res.json(user);
+        });
     }
 
-    create(req: express.Request, res: express.Response) {
+    create = (req: express.Request, res: express.Response) => {
         const postData = {
             email: req.body.email,
             fullName: req.body.fullName,

@@ -62,9 +62,9 @@ class MessageController {
         });
     }
 
-    create(req: express.Request, res: express.Response) {
+    create(req: any, res: express.Response) {
 
-        const userId = '623336cb6dea0b7cb76f7a07';
+        const userId = req.user._id;
 
         const postData = {
             text: req.body.text,

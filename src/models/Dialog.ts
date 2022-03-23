@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 import { IUser } from './User';
 
 
-export interface IDialog extends Document {
+export interface IDialog extends mongoose.Document {
 	partner: IUser | string;
 	author: IUser | string;
 }

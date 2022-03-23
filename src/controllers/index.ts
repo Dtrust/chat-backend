@@ -1,3 +1,8 @@
-export { default as UserController } from './UserController';
-export { default as DialogController } from './DialogController';
-export { default as MessageController } from './MessageController';
+import { default as UserCtl } from './UserController';
+import { default as DialogCtl } from './DialogController';
+import { default as MessageCtl } from './MessageController';
+
+
+export const UserController = new UserCtl();
+export const DialogController = new DialogCtl();
+export const MessageController = new MessageCtl();

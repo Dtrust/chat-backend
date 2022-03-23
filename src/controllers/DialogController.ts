@@ -5,9 +5,9 @@ import { DialogModel, MessageModel } from '../models';
 
 class DialogController {
 
-    index(req: express.Request, res: express.Response) {
+    index = (req: any, res: express.Response) => {
 
-        const authorId: string = req.params.authorId;
+        const authorId: string = req.user._id;
 
         DialogModel.find()
             .or([{author: authorId}, {partner: authorId}])
@@ -26,15 +26,6 @@ class DialogController {
                 }
                 return res.json(dialogs);
             });
-
-        // DialogModel.findById({author: authorId}, (err: any, dialogs: any) =>{
-        //     if(err) {
-        //         res.status(404).json({
-        //             message: "Dialog not found"
-        //         })
-        //     }
-        //     res.json(dialogs);
-        // });
     }
 
     show(req: express.Request, res: express.Response) {

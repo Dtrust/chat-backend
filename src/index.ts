@@ -1,15 +1,23 @@
-import mongoose from 'mongoose';
 import express from 'express';
+import { Server } from 'socket.io';
+import { createServer } from 'http';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 
-import { UserController, DialogController, MessageController } from './controllers';
+import createRoutes from "./core/routes";
+
+import './core/db'
 
 import { updateLastSeen, checkAuth } from "./middleware";
 
 
-const app = express()
+const app = express();
+const http = createServer(app);
+const io = new Server(http);
+
 dotenv.config();
+
+createRoutes(app);
 
 console.log(process.env.JWT_SECRET)
 
@@ -18,29 +26,20 @@ app.use(bodyParser.json());
 app.use(updateLastSeen);
 app.use(checkAuth)
 
-const User = new UserController();
-const Dialog = new DialogController();
-const Messages = new MessageController();
-
-mongoose.connect('mongodb+srv://admin_chat:PcC03bt4EMPOmQeX@cluster0.dfivd.mongodb.net/chat');
-
-app.get('/user/:id', User.show);
-app.post('/user/signup', User.create);
-app.delete('/user/:id', User.delete);
+// const User = new UserController();
+// const Dialog = new DialogController();
+// const Messages = new MessageController();
 
 
-app.get('/dialogs/:id', Dialog.index);
-app.post('/dialogs/', Dialog.create);
-app.delete('/dialogs/:id', Dialog.delete);
 
+// app.listen(process.env.PORT, () => {
+//     console.log(`Server: http://localhost:${process.env.PORT}`)
+// })
 
-app.get('/messages', Messages.index);
-app.post('/messages', Messages.create);
-app.delete('/messages/:id', Messages.delete);
+io.on('connection', (socket) => {
+    console.log('SOCKET CONNECTED!');
+});
 
-
-app.post("/user/signin", User.login);
-
-app.listen(process.env.PORT, () => {
-    console.log(`Server: http://localhost:${process.env.PORT}`)
-})
+http.listen(process.env.PORT, () => {
+    console.log(`listening on *:${process.env.PORT}`);
+});
