@@ -1,6 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 import isEmail from 'validator/lib/isEmail';
 
+import { generatePasswordHash } from "../utils";
+
 
 export interface IUser extends Document {
 	email: string;
@@ -10,6 +12,7 @@ export interface IUser extends Document {
 	avatar: string;
 	confirm_hash: string;
 	last_seen: Date;
+	data?: IUser;
 }
 
 const UserSchema = new Schema({
@@ -39,6 +42,17 @@ const UserSchema = new Schema({
 	},
 },{
 	timestamps: true,
+});
+
+UserSchema.pre<IUser>("save", async function (next) {
+	const user = this;
+
+	if (!user.isModified("password")) {
+		return next();
+	}
+
+	user.password = await generatePasswordHash(user.password);
+	user.confirm_hash = await generatePasswordHash(new Date().toString());
 });
 
 const UserModel = mongoose.model<IUser>('User', UserSchema)
