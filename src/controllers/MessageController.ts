@@ -5,7 +5,13 @@ import { MessageModel } from '../models';
 
 class MessageController {
 
-    index(req: express.Request, res: express.Response) {
+    io: any;
+
+    constructor(io: any) {
+        this.io = io
+    }
+
+    index = (req: express.Request, res: express.Response) => {
 
         const dialogId: any = req.query.dialog;
 
@@ -62,7 +68,7 @@ class MessageController {
         });
     }
 
-    create(req: any, res: express.Response) {
+    create = (req: any, res: express.Response) => {
 
         const userId = req.user._id;
 
@@ -78,14 +84,22 @@ class MessageController {
             .save()
             .then((obj: any) => {
                 console.log(obj)
-                res.json(obj)
+                obj.populate('dialog', (err: any, message: any) => {
+                    if(err) {
+                        return res.status(500).json({
+                            message: err
+                        })
+                    }
+                    res.json(message);
+                    this.io.emit('SERVER:NEW_MESSAGE', message);
+                })
             })
             .catch((reason: any) => {
                 res.json(reason)
             });
     }
 
-    delete(req: express.Request, res: express.Response) {
+    delete = (req: express.Request, res: express.Response) => {
         const id: string = req.params.id;
 
         MessageModel.findByIdAndDelete(id, (err: any, message: any) =>{

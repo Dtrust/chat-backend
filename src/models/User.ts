@@ -6,7 +6,7 @@ import { generatePasswordHash } from "../utils";
 
 export interface IUser extends mongoose.Document {
     email: string;
-    fullName: string;
+    username: string;
     password: string;
     confirmed: boolean;
     avatar: string;
@@ -22,9 +22,9 @@ const UserSchema = new Schema({
         validate: [isEmail, "Invalid email"],
         unique: true,
     },
-    fullName: {
+    username: {
         type: String,
-        required: 'Fullname is required',
+        required: 'Username is required',
     },
     password: {
         type: String,
@@ -35,7 +35,7 @@ const UserSchema = new Schema({
         default: false,
     },
     avatar: String,
-    confirmed_hash: String,
+    confirm_hash: String,
     last_seen: {
         type: Date,
         default: new Date(),
@@ -44,15 +44,26 @@ const UserSchema = new Schema({
     timestamps: true,
     });
 
-UserSchema.pre<IUser>("save", async function(next) {
-    const user = this;
+UserSchema.pre<IUser>("save", function(next) {
+    const user: IUser = this;
 
     if (!user.isModified("password")) {
         return next();
     }
 
-    user.password = await generatePasswordHash(user.password);
-    user.confirm_hash = await generatePasswordHash(new Date().toString());
+    generatePasswordHash(user.password)
+        .then( hash => {
+            user.password = String(hash);
+            generatePasswordHash(user.password)
+                .then( hash => {
+                    user.confirm_hash = String(hash);
+                    next();
+                })
+        })
+        .catch(err => {
+            next(err);
+        });
+
 });
 
 const UserModel = mongoose.model<IUser>('User', UserSchema)

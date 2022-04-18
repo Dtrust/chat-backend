@@ -8,7 +8,7 @@
 <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
     <script>
         window.onload = function() {
-			var socket = io("http://localhost:3000");
+			var socket = io("http://localhost:3003");
 
 			window.socket = socket;
 			socket.on("SERVER:NEW_MESSAGE", function(msg) {

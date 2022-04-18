@@ -1,14 +1,27 @@
 import express from 'express';
-import { Server } from 'socket.io';
+import bodyParser from "body-parser";
+import cors from 'cors';
 
-import {DialogController, MessageController, UserController} from "../controllers";
+import {DialogCtrl, MessageCtrl, UserCtrl} from "../controllers";
+import {checkAuth, updateLastSeen} from "../middleware";
+import {loginValidation, signupValidation} from "../utils/validations";
 
 
-const createRoutes = (app: express.Express) => {
+const createRoutes = (app: express.Express, io: any) => {
+
+    const UserController = new UserCtrl(io);
+    const DialogController = new DialogCtrl(io);
+    const MessageController = new MessageCtrl(io);
+
+    app.use(bodyParser.json());
+    app.use(cors());
+    app.use(updateLastSeen);
+    app.use(checkAuth);
+
     app.get('/user/:id', UserController.show);
     app.get('/user/me', UserController.getMe);
-    app.post('/user/signup', UserController.create);
-    app.post('/user/signin', UserController.login);
+    app.post('/user/signup', signupValidation, UserController.create);
+    app.post('/user/signin', loginValidation, UserController.login);
     app.delete('/user/:id', UserController.delete);
 
 

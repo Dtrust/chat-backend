@@ -9,7 +9,13 @@ import { createJWToken } from '../utils';
 
 class UserController {
 
-    show(req: express.Request, res: express.Response) {
+    io: any
+
+    constructor(io: any) {
+        this.io = io
+    }
+
+    show = (req: express.Request, res: express.Response) => {
         const id: string = req.params.id;
 
         UserModel.findById(id, (err: any, user: any) =>{
@@ -22,25 +28,35 @@ class UserController {
         });
     }
 
-    getMe(req: any, res: express.Response) {
-        const id: string = req.user._id;
-
-        UserModel.findById(id, (err: any, user: any) =>{
-            if(err) {
-                res.status(404).json({
+    getMe = (req: any, res: express.Response): void => {
+        const id: string = req.user && req.user._id;
+        UserModel.findById(id, (err: any, user: IUser) => {
+            console.log(req.user)
+            console.log(id)
+            if (err) {
+                return res.status(404).json({
                     message: "User not found"
-                })
+                });
             }
             res.json(user);
         });
-    }
+    };
+
 
     create = (req: express.Request, res: express.Response) => {
         const postData = {
             email: req.body.email,
-            fullName: req.body.fullName,
+            username: req.body.username,
             password: req.body.password,
         };
+
+        const errors: Result<ValidationError> = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(422).json({
+                errors: errors.array(),
+            })
+        }
 
         const user = new UserModel(postData);
 
@@ -51,11 +67,14 @@ class UserController {
                 res.json(obj)
             })
             .catch((reason: any) => {
-                res.json(reason)
+                res.status(500).json({
+                    status: 'error',
+                    message: reason
+                })
             });
     }
 
-    delete(req: express.Request, res: express.Response) {
+    delete = (req: express.Request, res: express.Response) => {
         const id: string = req.params.id;
 
         UserModel.findByIdAndDelete(id, (err: any, user: any) =>{
@@ -65,7 +84,7 @@ class UserController {
                 })
             } else {
                 res.json({
-                    message: `User ${user.fullName} removed`
+                    message: `User ${user.username} removed`
                 });
             }
         });
@@ -77,6 +96,8 @@ class UserController {
             password: req.body.password,
         };
 
+        console.log(postData)
+
         const errors: Result<ValidationError> = validationResult(req);
 
         if (!errors.isEmpty()) {
@@ -84,7 +105,7 @@ class UserController {
         } else {
             UserModel.findOne({email: postData.email}, (err: any, user: IUser) => {
                 if (err || !user) {
-                    return res.status(404).json({
+                    return res.json({
                         message: "User not found",
                     });
                 }
@@ -96,7 +117,7 @@ class UserController {
                         token,
                     });
                 } else {
-                    res.status(403).json({
+                    res.json({
                         status: "error",
                         message: "Incorrect password or email",
                     });
