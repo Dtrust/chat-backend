@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { MessageModel } from '../models';
+import { MessageModel, DialogModel } from '../models';
 
 
 class MessageController {
@@ -25,34 +25,6 @@ class MessageController {
                 }
                 return res.json(messages);
             });
-
-
-            //
-            // .or([{dialog: dialogId}])
-            // .populate(['author', 'partner'])
-            // .populate({
-            //     path: 'lastMessage',
-            //     populate: {
-            //         path: 'user',
-            //     },
-            // })
-            // .exec(function (err, dialogs) {
-            //     if (err) {
-            //         return res.status(404).json({
-            //             message: 'Messages not found',
-            //         });
-            //     }
-            //     return res.json(dialogs);
-            // });
-
-        // MessageModel.findById({author: authorId}, (err: any, dialogs: any) =>{
-        //     if(err) {
-        //         res.status(404).json({
-        //             message: "Message not found"
-        //         })
-        //     }
-        //     res.json(dialogs);
-        // });
     }
 
     show(req: express.Request, res: express.Response) {
@@ -87,9 +59,26 @@ class MessageController {
                 obj.populate('dialog', (err: any, message: any) => {
                     if(err) {
                         return res.status(500).json({
+                            status: 'error',
                             message: err
                         })
                     }
+                    DialogModel.findOneAndUpdate(
+                        {_id: postData.dialog},
+                        {lastMessage: message._id},
+                        {upsert: true},
+
+                        function(err) {
+                            if(err) {
+                                return res.status(500).json({
+                                    status: 'error',
+                                    message: err
+                                })
+                            }
+                        }
+
+                    )
+
                     res.json(message);
                     this.io.emit('SERVER:NEW_MESSAGE', message);
                 })

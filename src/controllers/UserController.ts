@@ -31,13 +31,12 @@ class UserController {
     getMe = (req: any, res: express.Response): void => {
         const id: string = req.user && req.user._id;
         UserModel.findById(id, (err: any, user: IUser) => {
-            console.log(req.user)
-            console.log(id)
-            if (err) {
+            if (err || !user) {
                 return res.status(404).json({
                     message: "User not found"
                 });
             }
+            console.log(user.isOnline)
             res.json(user);
         });
     };
@@ -124,6 +123,39 @@ class UserController {
                 }
             });
         }
+    }
+
+    verify = (req: express.Request, res: express.Response): void => {
+        const hash = req.query.hash;
+
+        if (!hash) {
+            res.status(422).json({errors: 'Invalid Hash'});
+        }
+
+        UserModel.findOne({ confirm_hash: hash}, (err: any, user: IUser) => {
+            if (err || !user) {
+                return res.status(404).json({
+                    status: 'error',
+                    message: "Hash not found"
+                });
+            }
+
+            user.confirmed = true;
+
+            user.save(err => {
+                if (err) {
+                    return res.status(404).json({
+                        status: 'error',
+                        message: err
+                    })
+                }
+
+                res.json({
+                    status: 'success',
+                    message: 'Account verified!'
+                });
+            })
+        });
     }
 }
 

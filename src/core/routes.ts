@@ -15,19 +15,20 @@ const createRoutes = (app: express.Express, io: any) => {
 
     app.use(bodyParser.json());
     app.use(cors());
-    app.use(updateLastSeen);
     app.use(checkAuth);
+    app.use(updateLastSeen);
 
-    app.get('/user/:id', UserController.show);
     app.get('/user/me', UserController.getMe);
+    app.get('/user/verify', UserController.verify);
     app.post('/user/signup', signupValidation, UserController.create);
     app.post('/user/signin', loginValidation, UserController.login);
+    app.get('/user/:id', UserController.show);
     app.delete('/user/:id', UserController.delete);
 
 
-    app.get('/dialogs/:id', DialogController.index);
-    app.post('/dialogs/', DialogController.create);
+    app.get('/dialogs', DialogController.index);
     app.delete('/dialogs/:id', DialogController.delete);
+    app.post('/dialogs', DialogController.create);
 
 
     app.get('/messages', MessageController.index);

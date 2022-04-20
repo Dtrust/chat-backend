@@ -1,6 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
-import isEmail from 'validator/lib/isEmail';
+import format from 'date-fns/format'
+import differenceInMinutes from 'date-fns/differenceInMinutes';
 
+import isEmail from 'validator/lib/isEmail';
 import { generatePasswordHash } from "../utils";
 
 
@@ -12,6 +14,7 @@ export interface IUser extends mongoose.Document {
     avatar: string;
     confirm_hash: string;
     last_seen: Date;
+    isOnline: Boolean,
     data?: IUser;
 }
 
@@ -44,6 +47,40 @@ const UserSchema = new Schema({
     timestamps: true,
     });
 
+//Todo this is not good practice
+const dateToNumber = (dateStr: string, dateType: string) => {
+    if (dateStr) {
+        return +format(new Date(dateStr), dateType)
+    } else {
+        return +format(new Date(), dateType)
+    }
+}
+
+UserSchema.virtual('isOnline').get(function(this: any) {
+    return differenceInMinutes(
+        new Date(
+            dateToNumber('', 'yyyy'),
+            dateToNumber('', 'MM'),
+            dateToNumber('', 'dd'),
+            dateToNumber('', 'HH'),
+            dateToNumber('', 'mm'),
+            dateToNumber('', 'ss')
+        ),
+        new Date(
+            dateToNumber(this.last_seen, 'yyyy'),
+            dateToNumber(this.last_seen, 'MM'),
+            dateToNumber(this.last_seen, 'dd'),
+            dateToNumber(this.last_seen, 'HH'),
+            dateToNumber(this.last_seen, 'mm'),
+            dateToNumber(this.last_seen, 'ss')
+        )
+    ) < 5;
+});
+
+UserSchema.set('toJSON', {
+    virtuals: true
+});
+
 UserSchema.pre<IUser>("save", function(next) {
     const user: IUser = this;
 
@@ -52,11 +89,11 @@ UserSchema.pre<IUser>("save", function(next) {
     }
 
     generatePasswordHash(user.password)
-        .then( hash => {
+        .then(hash => {
             user.password = String(hash);
-            generatePasswordHash(user.password)
-                .then( hash => {
-                    user.confirm_hash = String(hash);
+            generatePasswordHash(+new Date() + '')
+                .then( confirmHash => {
+                    user.confirm_hash = String(confirmHash);
                     next();
                 })
         })
