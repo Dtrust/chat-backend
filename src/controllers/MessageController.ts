@@ -11,15 +11,26 @@ class MessageController {
         this.io = io
     }
 
-    index = (req: express.Request, res: express.Response) => {
+    index = (req: any, res: express.Response) => {
 
         const dialogId: any = req.query.dialog;
+        const userId: any = req.user._id;
+
+        MessageModel.updateMany( { dialog: dialogId, user: {$ne: userId } }, { "$set": { unread: false } }, (err: any) => {
+            if (err) {
+                return res.status(500).json({
+                    status: 'error',
+                    message: err,
+                });
+            }
+        });
 
         MessageModel.find({ dialog: dialogId })
-            .populate(['dialog'])
+            .populate(['dialog', 'user', 'attachments'])
             .exec(function (err, messages) {
                 if (err) {
                     return res.status(404).json({
+                        status: 'error',
                         message: 'Messages not found',
                     });
                 }
@@ -48,6 +59,7 @@ class MessageController {
             text: req.body.text,
             user: userId,
             dialog: req.body.dialog_id,
+            attachments: req.body.attachments
         };
 
         const message = new MessageModel(postData);
@@ -55,8 +67,12 @@ class MessageController {
         message
             .save()
             .then((obj: any) => {
-                console.log(obj)
-                obj.populate('dialog', (err: any, message: any) => {
+
+                if (req.body.attachments) {
+                    obj.attachments.push()
+                }
+
+                obj.populate(['dialog', 'user', 'attachments'], (err: any, message: any) => {
                     if(err) {
                         return res.status(500).json({
                             status: 'error',
@@ -88,20 +104,78 @@ class MessageController {
             });
     }
 
-    delete = (req: express.Request, res: express.Response) => {
-        const id: string = req.params.id;
+    delete = (req: any, res: express.Response) => {
 
-        MessageModel.findByIdAndDelete(id, (err: any, message: any) =>{
-            if(err) {
+        const id: string = req.query.id;
+        const userId: string = req.user._id;
+
+        MessageModel.findById(id, (err: any, message: any) =>{
+            if(err || !message) {
                 res.status(404).json({
-                    message: 'Message not found'
+                    status: 'error',
+                    message: `Message not found`,
+                })
+            }
+
+            if (message.user.toString() === userId) {
+
+                const dialogId = message.dialog;
+
+                //Todo fix the created_at string, because if we are deleted message, lastMessage === first message of Dialog
+                MessageModel.findOne({dialog: dialogId}, {}, { sort: { 'created_at': -1 } }, (err, lastMessage) => {
+                    if (err) {
+                        res.status(500).json({
+                            status: 'error',
+                            message: err,
+                        })
+                    }
+
+                    DialogModel.findById(dialogId, (err: any, dialog: any) => {
+                        if (err) {
+                            res.status(500).json({
+                                status: 'error',
+                                message: err,
+                            })
+                        }
+
+                        dialog.lastMessage = lastMessage;
+                        dialog.save();
+                    })
+                })
+
+                message.remove()
+                return res.json({
+                    status: 'success',
+                    message: 'Message deleted'
                 })
             } else {
-                res.json({
-                    message: `Message removed`
-                });
+                return res.status(403).json({
+                    status: 'error',
+                    message: 'Not have permission',
+                })
             }
         });
+
+        // const id: string = req.params.id;
+        // const userId: string = req.user._id;
+        //
+        // MessageModel.findByIdAndDelete(id, (err: any, message: any) =>{
+        //     console.log()
+        //     if (message.user === userId) {
+        //         if(err) {
+        //             res.status(404).json({
+        //                 status: 'error',
+        //                 message: `Message removed`
+        //             })
+        //         } else {
+        //             res.json({
+        //                 status: 'success',
+        //                 message: 'Message deleted',
+        //             });
+        //         }
+        //     }
+        // });
+
     }
 
 }

@@ -47,7 +47,7 @@ const UserSchema = new Schema({
     timestamps: true,
     });
 
-//Todo this is not good practice
+// Todo: this is not good practice
 const dateToNumber = (dateStr: string, dateType: string) => {
     if (dateStr) {
         return +format(new Date(dateStr), dateType)

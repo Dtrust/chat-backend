@@ -13,10 +13,10 @@ class DialogController {
 
     index = (req: any, res: express.Response) => {
 
-        const authorId: string = req.user._id;
+        const userId: string = req.user._id;
 
         DialogModel.find()
-            .or([{author: authorId}, {partner: authorId}])
+            .or([{author: userId}, {partner: userId}])
             .populate(['author', 'partner'])
             .populate({
                 path: 'lastMessage',
@@ -47,9 +47,9 @@ class DialogController {
         });
     }
 
-    create = (req: express.Request, res: express.Response) => {
+    create = (req: any, res: express.Response) => {
         const postData = {
-            author: req.body.author,
+            author: req.user._id,
             partner: req.body.partner,
         };
 
@@ -63,13 +63,21 @@ class DialogController {
                 const message = new MessageModel({
                     text: req.body.text,
                     dialog: dialogObj._id,
-                    user: req.body.author,
+                    //Todo check this problem with USER
+                    user: req.user._id,
                 });
 
                 message
                     .save()
                     .then(() => {
-                        res.json({dialog: dialogObj})
+                        dialogObj.lastMessage = message._id;
+                        dialogObj.save().then(() => {
+                            res.json({dialog: dialogObj});
+                            this.io.emit("SERVER:DIALOG_CREATED", {
+                                ...postData,
+                                dialog: dialogObj
+                            });
+                        })
                     })
                     .catch((reason: any) => {
                         res.json(reason)

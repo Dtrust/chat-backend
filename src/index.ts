@@ -16,7 +16,8 @@ dotenv.config();
 
 createRoutes(app, io);
 
-console.log(process.env.JWT_SECRET)
+console.log(process.env.JWT_SECRET);
+console.log(process.env.CLOUDINARY_API_KEY, 'cloudinary');
 
 // app.use(bodyParser.urlencoded({extended: false}));
 
