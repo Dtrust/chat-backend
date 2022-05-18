@@ -4,7 +4,7 @@ import cloudinary from "../core/cloudinary";
 import { UploadFileModel } from "../models";
 import { IUploadFile, IUploadFileDocument } from "../models/UploadFile";
 
-class UserController {
+class UploadFileController {
     create = (req: any, res: express.Response): void => {
         const userId: string = req.user._id;
         const file: any = req.file;
@@ -71,4 +71,4 @@ class UserController {
     };
 }
 
-export default UserController;
+export default UploadFileController;

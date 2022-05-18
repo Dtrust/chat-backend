@@ -122,7 +122,7 @@ class MessageController {
                 const dialogId = message.dialog;
 
                 //Todo fix the created_at string, because if we are deleted message, lastMessage === first message of Dialog
-                MessageModel.findOne({dialog: dialogId}, {}, { sort: { 'created_at': -1 } }, (err, lastMessage) => {
+                MessageModel.findOne({dialog: dialogId}, {}, { sort: { 'createdAt': -1 } }, (err, lastMessage) => {
                     if (err) {
                         res.status(500).json({
                             status: 'error',
