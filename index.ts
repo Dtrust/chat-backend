@@ -4,10 +4,10 @@ import { createServer } from 'http';
 import dotenv from 'dotenv';
 
 dotenv.config();
-import './core/db';
+import './src/core/db';
 
-import createRoutes from "./core/routes";
-import createSocket from './core/socket';
+import createRoutes from "./src/core/routes";
+import createSocket from './src/core/socket';
 
 
 const app = express();
