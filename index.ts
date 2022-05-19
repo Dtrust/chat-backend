@@ -31,7 +31,7 @@ createRoutes(app, io);
 // })
 
 
-httpServer.listen(process.env.PORT, function () {
+httpServer.listen(process.env.PORT || 8080, function () {
     console.log(`Server: http://localhost:${process.env.PORT}`);
 });
 
