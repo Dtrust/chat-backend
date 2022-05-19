@@ -36,7 +36,6 @@ class UserController {
                     message: "User not found"
                 });
             }
-            console.log(user.isOnline)
             res.json(user);
         });
     };
@@ -77,7 +76,6 @@ class UserController {
         user
             .save()
             .then((obj: any) => {
-                console.log(obj)
                 res.json(obj)
             })
             .catch((reason: any) => {
@@ -109,8 +107,6 @@ class UserController {
             email: req.body.email,
             password: req.body.password,
         };
-
-        console.log(postData)
 
         const errors: Result<ValidationError> = validationResult(req);
 

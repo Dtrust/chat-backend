@@ -1,4 +1,9 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
 
-mongoose.connect('mongodb+srv://admin_chat:PcC03bt4EMPOmQeX@cluster0.dfivd.mongodb.net/chat');
+dotenv.config();
+
+console.log(process.env.MONGO_DB)
+
+mongoose.connect(`mongodb+srv://admin_chat:${process.env.MONGO_DB}@cluster0.dfivd.mongodb.net/chat`);

@@ -3,21 +3,20 @@ import { Server, Socket } from 'socket.io';
 import { createServer } from 'http';
 import dotenv from 'dotenv';
 
-import createRoutes from "./core/routes";
+dotenv.config();
+import './core/db';
 
-import './core/db'
+import createRoutes from "./core/routes";
+import createSocket from './core/socket';
 
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer,  { cors: { origin: '*' } } );
+const io = createSocket(httpServer);
+// const io = new Server(httpServer,  { cors: { origin: '*' } } );
 
-dotenv.config();
 
 createRoutes(app, io);
-
-console.log(process.env.JWT_SECRET);
-console.log(process.env.CLOUDINARY_API_KEY, 'cloudinary');
 
 // app.use(bodyParser.urlencoded({extended: false}));
 
@@ -31,22 +30,34 @@ console.log(process.env.CLOUDINARY_API_KEY, 'cloudinary');
 //     console.log(`Server: http://localhost:${process.env.PORT}`)
 // })
 
-io.on('connection', (socket: Socket) => {
-    console.log('SOCKET CONNECTED!');
 
-    getApiAndEmit(socket);
-    socket.on('disconnect', () => {
-        console.log('Disconnected');
-    });
+httpServer.listen(process.env.PORT, function () {
+    console.log(`Server: http://localhost:${process.env.PORT}`);
 });
 
-const getApiAndEmit = (socket: Socket) => {
-    const response = 'response you need';
-    socket.emit('FromAPI', response);
-};
 
-app.set('port', process.env.PORT );
 
-httpServer.listen(app.get('port'), () => {
-    console.log(`listening on *:${process.env.PORT}`);
-});
+
+
+
+
+
+// io.on('connection', (socket: Socket) => {
+//     console.log('SOCKET CONNECTED!');
+//
+//     getApiAndEmit(socket);
+//     socket.on('disconnect', () => {
+//         console.log('Disconnected');
+//     });
+// });
+//
+// const getApiAndEmit = (socket: Socket) => {
+//     const response = 'response you need';
+//     socket.emit('FromAPI', response);
+// };
+//
+// app.set('port', process.env.PORT );
+//
+// httpServer.listen(app.get('port'), () => {
+//     console.log(`listening on *:${process.env.PORT}`);
+// });

@@ -58,7 +58,6 @@ class DialogController {
         dialog
             .save()
             .then((dialogObj: any) => {
-                console.log(dialogObj)
 
                 const message = new MessageModel({
                     text: req.body.text,

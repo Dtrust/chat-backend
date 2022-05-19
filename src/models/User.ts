@@ -74,7 +74,7 @@ UserSchema.virtual('isOnline').get(function(this: any) {
             dateToNumber(this.last_seen, 'mm'),
             dateToNumber(this.last_seen, 'ss')
         )
-    ) < 5;
+    ) < .2;
 });
 
 UserSchema.set('toJSON', {
