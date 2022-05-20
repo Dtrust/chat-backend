@@ -3,7 +3,7 @@ import http from 'http';
 
 export default (http: http.Server) => {
 
-    const io = new Server(http,  { cors: { origin: '*' } } );
+    const io = new Server(http,  { cors: { origin: 'https://skymessenger.herokuapp.com' } } );
 
     io.on('connection', function(socket: any) {
         socket.on('DIALOGS:JOIN', (dialogId: string) => {
