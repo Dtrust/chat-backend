@@ -17,7 +17,7 @@ const createRoutes = (app: express.Express, io: any) => {
     const UploadFileController = new UploadFileCtrl();
 
     app.use(bodyParser.json());
-    app.use(cors());
+    app.use(cors({origin: '*'}));
     app.use(checkAuth);
     app.use(updateLastSeen);
 
