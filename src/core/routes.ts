@@ -19,9 +19,7 @@ const createRoutes = (app: express.Express, io: any) => {
     app.use(bodyParser.json());
     app.use(cors({
         origin: '*',
-        methods: ["GET", "POST"],
-        allowedHeaders: ["my-custom-header"],
-        credentials: true
+        allowedHeaders: ["my-custom-header"]
     }));
     app.use(checkAuth);
     app.use(updateLastSeen);
