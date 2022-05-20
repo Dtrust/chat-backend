@@ -19,7 +19,9 @@ const createRoutes = (app: express.Express, io: any) => {
     app.use(bodyParser.json());
     app.use(cors({
         origin: 'https://skymessenger.herokuapp.com',
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        credentials: true
     }));
     app.use(checkAuth);
     app.use(updateLastSeen);
