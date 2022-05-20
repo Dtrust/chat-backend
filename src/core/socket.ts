@@ -6,7 +6,7 @@ export default (http: http.Server) => {
     const io = new Server(http,
         { cors:
                 {
-                    origin: 'https://skymessenger.herokuapp.com',
+                    origin: '*',
                     methods: ["GET", "POST"],
                     allowedHeaders: ["my-custom-header"],
                     credentials: true
