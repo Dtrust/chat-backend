@@ -23,7 +23,14 @@ const createRoutes = (app: express.Express, io: any) => {
     //     // allowedHeaders: ["sky-messenger-header"],
     //     // credentials: true
     // }));
-    app.use(cors());
+    app.use((req, res, next) => {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept"
+        );
+        next();
+    });
     app.use(checkAuth);
     app.use(updateLastSeen);
 
