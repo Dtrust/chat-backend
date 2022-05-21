@@ -24,7 +24,7 @@ const createRoutes = (app: express.Express, io: any) => {
     //     // credentials: true
     // }));
     app.use((req, res, next) => {
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Origin", "https://skymessenger.herokuapp.com");
         res.header(
             "Access-Control-Allow-Headers",
             "Origin, X-Requested-With, Content-Type, Accept"
