@@ -1,14 +1,14 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\Dennis\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js remove express-cors-anywhere
+  C:\Program Files\nodejs\node.exe C:\Users\38050\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js remove express-cors-anywhere
 
 PATH: 
-  C:\Users\Dennis\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Dennis\bin;G:\Projects\chat-backend\node_modules\.bin;C:\Python39\Scripts;C:\Python39;C:\Program Files\ImageMagick-7.0.10-Q16-HDRI;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files\Common Files\Autodesk Shared;C:\Program Files (x86)\Autodesk\Backburner;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Users\Dennis\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\Dennis\AppData\Local\Programs\Python\Python37\Scripts;C:\Users\Dennis\AppData\Local\Programs\Python\Python37;C:\Users\Dennis\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft VS Code\bin;C:\Users\Dennis\AppData\Local\GitHubDesktop\bin;C:\Program Files\JetBrains\WebStorm 2020.2.3\bin;C:\Users\Dennis\AppData\Roaming\npm;C:\Users\Dennis\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\heroku\bin;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
+  C:\Users\38050\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\38050\bin;G:\Projects\chat-backend\node_modules\.bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\Program Files\nodejs;C:\Program Files\Git\cmd;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\Microsoft SQL Server\120\Tools\Binn;C:\Users\38050\AppData\Local\Microsoft\WindowsApps;C:\Users\38050\AppData\Roaming\npm;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\JetBrains\WebStorm 2020.1\bin;C:\Program Files\JetBrains\PhpStorm 2021.1.1\bin;C:\Program Files\heroku\bin;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
 
 Yarn version: 
-  1.22.10
+  1.22.18
 
 Node version: 
-  14.17.0
+  16.15.0
 
 Platform: 
   win32 x64

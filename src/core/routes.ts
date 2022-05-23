@@ -17,20 +17,19 @@ const createRoutes = (app: express.Express, io: any) => {
     const UploadFileController = new UploadFileCtrl();
 
     app.use(bodyParser.json());
-    // app.use(cors({
-    //     origin: 'https://skymessenger.herokuapp.com',
-    //     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    //     // allowedHeaders: ["sky-messenger-header"],
-    //     // credentials: true
-    // }));
-    app.use((req, res, next) => {
-        res.setHeader("Access-Control-Allow-Origin", "https://skymessenger.herokuapp.com");
-        res.header(
-            "Access-Control-Allow-Headers",
-            "Origin, X-Requested-With, Content-Type, Accept"
-        );
-        next();
-    });
+    app.use(cors({
+        origin: 'https://skymessenger.herokuapp.com',
+        methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
+        preflightContinue: true,
+    }));
+    // app.use((req, res, next) => {
+    //     res.setHeader("Access-Control-Allow-Origin", "https://skymessenger.herokuapp.com");
+    //     res.header(
+    //         "Access-Control-Allow-Headers",
+    //         "Origin, X-Requested-With, Content-Type, Accept"
+    //     );
+    //     next();
+    // });
     app.use(checkAuth);
     app.use(updateLastSeen);
 
