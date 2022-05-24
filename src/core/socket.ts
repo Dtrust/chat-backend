@@ -5,11 +5,10 @@ export default (http: http.Server) => {
 
     const io = new Server(http,
         {
-            cors:
-                {
-                    origin: '*',
-                    // allowedHeaders: ["sky-messenger-header"]
-                }
+            allowRequest: (req, callback) => {
+                const noOriginHeader = req.headers.origin === undefined;
+                callback(null, noOriginHeader);
+            }
         });
 
     io.on('connection', function(socket: any) {
