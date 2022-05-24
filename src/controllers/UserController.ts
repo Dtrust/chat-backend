@@ -138,7 +138,6 @@ class UserController {
 
     verify = (req: express.Request, res: express.Response): void => {
         const hash = req.query.hash;
-
         if (!hash) {
             res.status(422).json({errors: 'Invalid Hash'});
         }

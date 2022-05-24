@@ -7,7 +7,7 @@ export default (http: http.Server) => {
         {
             cors:
                 {
-                    origin: 'https://skymessenger.herokuapp.com',
+                    origin: '*',
                     // allowedHeaders: ["sky-messenger-header"]
                 }
         });
