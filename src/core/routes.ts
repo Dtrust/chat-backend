@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from "body-parser";
 import cors from 'cors';
+import sslRedirect from 'heroku-ssl-redirect';
 
 import {DialogCtrl, MessageCtrl, UserCtrl, UploadFileCtrl} from "../controllers";
 import {checkAuth, updateLastSeen} from "../middleware";
@@ -33,6 +34,7 @@ const createRoutes = (app: express.Express, io: any) => {
     app.use(checkAuth);
     app.use(updateLastSeen);
 
+    app.use(sslRedirect());
 
     app.get('/user/me', UserController.getMe);
     app.get('/user/verify', UserController.verify);
