@@ -17,7 +17,7 @@ const createRoutes = (app: express.Express, io: any) => {
     const UploadFileController = new UploadFileCtrl();
 
     app.use(cors({
-        origin: 'https://skymessenger.herokuapp.com',
+        origin: '*',
         methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
         preflightContinue: true,
     }));
