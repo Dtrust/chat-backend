@@ -17,7 +17,7 @@ export default (token: string): Promise<DecodedData | null> =>
         ) => {
             jwt.verify(
                 token,
-                process.env.JWT_SECRET as string,
+                process.env.JWT_SECRET || '',
                 (err: any, decodedData) => {
                     if (err || !decodedData) {
                         return reject(err);
