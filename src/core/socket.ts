@@ -1,4 +1,4 @@
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import http from 'http';
 
 export default (http: http.Server) => {
@@ -8,8 +8,6 @@ export default (http: http.Server) => {
             cors:
                 {
                     origin: 'https://skymessenger.herokuapp.com',
-                    credentials: true,
-                    // allowedHeaders: ["sky-messenger-header"]
                 }
         });
 
